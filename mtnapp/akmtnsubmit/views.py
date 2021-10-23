@@ -21,7 +21,7 @@ class SubmitView(APIView):
             echo=True)
 
         print('Line 25')
-        data = request.get_json()
+        data = request.data
         print(data)
 
         name = data["name"]
@@ -42,7 +42,6 @@ class SubmitView(APIView):
 
         print('x_df created')
 
-        # y = pd.read_sql_query('SELECT * FROM answer', con=con)
         y = pd.read_sql_query('SELECT * FROM answer', con=engine)
         y['status'] = y['status'].astype('int')
         print('past read_sql_query')
@@ -72,6 +71,7 @@ class SubmitView(APIView):
 
 
 class ScoresView(APIView):
+    permission_classes = (AllowAny,)
     def get(self, request, *args, **kwargs):
         engine = sqlalchemy.create_engine(
             "mssql+pyodbc://julesd:Password1@akmtntest.database.windows.net/akmtntest?DRIVER={ODBC Driver 17 for SQL Server}",
