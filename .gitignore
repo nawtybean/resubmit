@@ -1,0 +1,6 @@
+/.idea
+/venv
+/*.pyc
+*.pyc
+.env
+/mtnapp/.env
