@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from sqlalchemy.pool import NullPool
 import pandas as pd
 import sqlalchemy
 from sklearn import metrics
@@ -18,7 +19,7 @@ class SubmitView(APIView):
     def post(self, request, *args, **kwargs):
         engine = sqlalchemy.create_engine(
             "mssql+pyodbc://julesd:Password1@akmtntest.database.windows.net/akmtntest?DRIVER={ODBC Driver 17 for SQL Server}",
-            echo=True)
+            echo=True, poolclass=NullPool)
 
         print('Line 25')
         data = request.data
@@ -67,6 +68,7 @@ class SubmitView(APIView):
 
         print('complete')
         result = {'message': f'F1 Score: {score * 100}%'}
+        engine.dispose()
         return Response(result)
 
 
@@ -83,4 +85,5 @@ class ScoresView(APIView):
         results = results.to_dict()
 
         result = {'message': results}
+        engine.dispose()
         return Response(result)
